@@ -27,7 +27,7 @@ half2 CalculateGlobalFogCoords(float3 posWS)
 {
 	half2 fogCoord = 0.0;
 	half scale = distance(posWS, _WorldSpaceCameraPos);
-	fogCoord.x = (depthFogGradientDelta * scale  + depthFogGradientStartAdd) * depthFogDensity;
+	fogCoord.x = (depthFogGradientDelta * scale  + depthFogGradientStartAdd);
 	fogCoord.y = exp(-posWS.y - verticalFogBaseHight) * verticalFogDensity;
 	return saturate(fogCoord.xy);
 }
@@ -35,7 +35,7 @@ half2 CalculateGlobalFogCoords(float3 posWS)
 half3 ApplyGlobalFog(half3 c, half2 fogCoord)
 {
 	half4 depthFogColor = tex2D(depthFogGradientTexture, half2( fogCoord.x, 0.0f)).rgba;
-	c.rgb = lerp(c.rgb, depthFogColor.rgb, depthFogColor.a);
+	c.rgb = lerp(c.rgb, depthFogColor.rgb,  saturate(depthFogColor.a * depthFogDensity));
 
 	half4 verticalFogColor = tex2D(verticalFogGradientTexture, half2( fogCoord.y, 0.0f)).rgba;
 	c.rgb = lerp(c.rgb, verticalFogColor.rgb,  fogCoord.y);
