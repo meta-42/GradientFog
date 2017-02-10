@@ -1,9 +1,18 @@
 ﻿#ifndef GRADIENT_FOG_INCLUDED
 #define GRADIENT_FOG_INCLUDED 
 
-#define GRADIENT_GLOBAL_FOG_COORDS(idx)			float2 fogCoord : TEXCOORD##idx;
-#define GRADIENT_GLOBAL_FOG_TRANSFER(o, posW)	o.fogCoord.xy = CalculateFogCoords(posW);
-#define GRADIENT_GLOBAL_FOG_APPLY(c, coord)		c.rgb = ApplyFog( c.rgb, coord.xy);
+//place   #pragma multi_compile _ GRADIENT_GLOBAL_FOG  to shader
+
+#if defined(GRADIENT_GLOBAL_FOG)
+	#define GRADIENT_GLOBAL_FOG_COORDS(idx)			float2 fogCoord : TEXCOORD##idx;
+	#define GRADIENT_GLOBAL_FOG_TRANSFER(o, posOS)	o.fogCoord.xy = CalculateGlobalFogCoords(mul(unity_ObjectToWorld, posOS.xyzw).xyz);
+	#define GRADIENT_GLOBAL_FOG_APPLY(inFogCoord, c)		c.rgb = ApplyGlobalFog(c.rgb, inFogCoord.xy);
+#else
+	#define GRADIENT_GLOBAL_FOG_COORDS(idx)
+	#define GRADIENT_GLOBAL_FOG_TRANSFER(o, posOS)
+	#define GRADIENT_GLOBAL_FOG_APPLY(inFogCoord, c)
+#endif
+
 
 uniform half depthFogDensity;
 uniform half depthFogGradientDelta;
@@ -14,12 +23,12 @@ uniform half verticalFogDensity;
 uniform half verticalFogBaseHight;
 uniform sampler2D verticalFogGradientTexture;
 
-half2 CalculateGlobalFogCoords(float3 posWs)
+half2 CalculateGlobalFogCoords(float3 posWS)
 {
 	half2 fogCoord = 0.0;
-	half scale = distance(posWs, _WorldSpaceCameraPos);
+	half scale = distance(posWS, _WorldSpaceCameraPos);
 	fogCoord.x = (depthFogGradientDelta * scale  + depthFogGradientStartAdd) * depthFogDensity;
-	fogCoord.y = exp(-posWs.y - verticalFogBaseHight) * verticalFogDensity;
+	fogCoord.y = exp(-posWS.y - verticalFogBaseHight) * verticalFogDensity;
 	return saturate(fogCoord.xy);
 }
 

@@ -4,19 +4,19 @@ using System.Collections;
 [ExecuteInEditMode]
 public class GradientGlobalFog : MonoBehaviour
 {
-    public int gradientTextureWidth = 32;
+    public int gradientTextureWidth = 128;
 
     [Header("DepthFog")]
 
-    public float depthFogDensity;
+    public float depthFogDensity = 1.0f;
     public float depthFogStartDistance = 0.0f;
     public float depthFogEndDistance = 100.0f;
     public Gradient depthFogGradient = new Gradient();
     Texture2D depthFogGradientTexture;
 
     [Header("Vertical Fog")]
-    public float verticalFogDensity;
-    public float verticalFogBaseHight;
+    public float verticalFogDensity = 1.0f;
+    public float verticalFogBaseHight = 0.0f;
     public Gradient verticalFogGradient = new Gradient();
     Texture2D verticalFogGradientTexture;
 
@@ -26,10 +26,14 @@ public class GradientGlobalFog : MonoBehaviour
         UpdateConstants();
     }
 
-    void Update()
+    void OnEnable()
     {
-        //for Edit
-        if (Application.isEditor && !Application.isPlaying) UpdateConstants();
+        Shader.EnableKeyword("GRADIENT_GLOBAL_FOG");
+    }
+
+    void OnDisable()
+    {
+        Shader.DisableKeyword("GRADIENT_GLOBAL_FOG");
     }
 
     private void UpdateConstants()
@@ -48,7 +52,7 @@ public class GradientGlobalFog : MonoBehaviour
         Shader.SetGlobalFloat("verticalFogBaseHight", verticalFogBaseHight);
     }
 
-    private void GenerateTexture()
+    public void GenerateTexture()
     {
         depthFogGradientTexture = new Texture2D(gradientTextureWidth, 1, TextureFormat.ARGB32, false);
         depthFogGradientTexture.wrapMode = TextureWrapMode.Clamp;
@@ -80,4 +84,15 @@ public class GradientGlobalFog : MonoBehaviour
 
     }
 
+
+#if UNITY_EDITOR
+    void Update()
+    {
+        if (!Application.isPlaying)
+        {
+            UpdateConstants();
+        }
+    }
+#endif
 }
+
