@@ -2,7 +2,7 @@
 using System.Collections;
 
 [ExecuteInEditMode]
-public class GradientGlobalFog : MonoBehaviour
+public class GradientFog : MonoBehaviour
 {
     public int gradientTextureWidth = 128;
 
@@ -28,12 +28,12 @@ public class GradientGlobalFog : MonoBehaviour
 
     void OnEnable()
     {
-        Shader.EnableKeyword("GRADIENT_GLOBAL_FOG");
+        Shader.EnableKeyword("GRADIENT_FOG");
     }
 
     void OnDisable()
     {
-        Shader.DisableKeyword("GRADIENT_GLOBAL_FOG");
+        Shader.DisableKeyword("GRADIENT_FOG");
     }
 
     private void UpdateConstants()
