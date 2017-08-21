@@ -1,16 +1,16 @@
 ﻿#ifndef GRADIENT_FOG_INCLUDED
 #define GRADIENT_FOG_INCLUDED 
 
-//place   #pragma multi_compile _ GRADIENT_GLOBAL_FOG  to shader
+//place   #pragma multi_compile _ GRADIENT_FOG  to shader
 
-#if defined(GRADIENT_GLOBAL_FOG)
-	#define GRADIENT_GLOBAL_FOG_COORDS(idx)			float2 fogCoord : TEXCOORD##idx;
-	#define GRADIENT_GLOBAL_FOG_TRANSFER(o, posOS)	o.fogCoord.xy = CalculateGlobalFogCoords(mul(unity_ObjectToWorld, posOS.xyzw).xyz);
-	#define GRADIENT_GLOBAL_FOG_APPLY(inFogCoord, c)		c.rgb = ApplyGlobalFog(c.rgb, inFogCoord.xy);
+#if defined(GRADIENT_FOG)
+	#define GRADIENT_FOG_COORDS(idx)			float2 fogCoord : TEXCOORD##idx;
+	#define GRADIENT_FOG_TRANSFER(o, posOS)	o.fogCoord.xy = CalculateGlobalFogCoords(mul(unity_ObjectToWorld, posOS.xyzw).xyz);
+	#define GRADIENT_FOG_APPLY(inFogCoord, c)		c.rgb = ApplyGlobalFog(c.rgb, inFogCoord.xy);
 #else
-	#define GRADIENT_GLOBAL_FOG_COORDS(idx)
-	#define GRADIENT_GLOBAL_FOG_TRANSFER(o, posOS)
-	#define GRADIENT_GLOBAL_FOG_APPLY(inFogCoord, c)
+	#define GRADIENT_FOG_COORDS(idx)
+	#define GRADIENT_FOG_TRANSFER(o, posOS)
+	#define GRADIENT_FOG_APPLY(inFogCoord, c)
 #endif
 
 
