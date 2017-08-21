@@ -1,5 +1,5 @@
-# GradientGlobalFog
-GlobalFog In Unity,  Not PostProcess,   Gradient，Reference to The lab render
+# GradientFog
+GradientFog In Unity,  Not PostProcess,   Gradient，Reference to The lab render
 
 ![image](https://github.com/meta-42/GradientGlobalFog/blob/master/fog.gif )   
 
